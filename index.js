@@ -83,6 +83,7 @@ module.exports = (options) => {
       forOwn(customModules, (module, path) => {
         deps[path] = isFunction(module) ? module(deps) : module;
       });
+      Object.freeze(deps);
       deps[entry](initialState);
       d('Bootstrapping done!');
     })
