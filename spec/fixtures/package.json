@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "../../../spec/fixtures/fakeModule": "1.0.0"
+  }
+}

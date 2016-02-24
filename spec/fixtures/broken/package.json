@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "./broken/path/to/module": "1.0.0"
+  }
+}

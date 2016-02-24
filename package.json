@@ -1,0 +1,55 @@
+{
+  "name": "breadboard",
+  "version": "1.0.0",
+  "description": "Lightweight IOC container for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/ava/cli.js",
+    "test-ci": "npm test -- --tap | node_modules/tap-xunit/bin/tap-xunit",
+    "coverage": "./node_modules/.bin/nyc ./node_modules/ava/cli.js --all",
+    "report": "npm run coverage && ./node_modules/.bin/nyc report --reporter=html",
+    "codeclimate": "npm run coverage -- --reporter=lcov --reporter=text-lcov | ./node_modules/codeclimate-test-reporter/bin/codeclimate.js",
+    "lint": "./node_modules/eslint/bin/eslint.js ."
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
+  "author": "Marek Stasikowski and Simon Adcock <marekstasikowski+simonadcock@notonthehighstreet.com>",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "2.2.0",
+    "harmony-reflect": "1.4.4",
+    "lodash": "4.5.1",
+    "sinon": "1.17.3",
+    "walk": "2.3.9"
+  },
+  "ava": {
+    "files": [
+      "**/*.spec.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "lib/**/*.js"
+    ],
+    "exclude": [
+      "lib/autoMock.js"
+    ]
+  },
+  "devDependencies": {
+    "ava": "0.12.0",
+    "babel-eslint": "6.0.0",
+    "tap-xunit": "1.3.1",
+    "chance": "1.0.1",
+    "codeclimate-test-reporter": "0.3.1",
+    "eslint": "2.4.0",
+    "mock-require": "1.2.1",
+    "nyc": "6.0.0",
+    "pre-commit": "1.1.2",
+    "sinon": "1.17.3"
+  }
+}
