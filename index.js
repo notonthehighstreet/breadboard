@@ -7,7 +7,6 @@ const walk = require('walk').walk;
 const forOwn = require('lodash/forOwn');
 const isFunction = require('lodash/isFunction');
 const debug = require('debug');
-
 const deps = {};
 const d = debug('breadboard:setup');
 const e = debug('breadboard:error');
@@ -19,15 +18,16 @@ const getModuleKey = (containerRoot, absolutePathToModule, parsedModulePath) => 
 };
 const getNativeModules = () => {
   return new Promise((resolve) => {
-    resolve(
-      Object.keys(process.binding('natives')).reduce((nativeModules, nativeDepName) => {
-        if (!/^internal\/|_/.test(nativeDepName)) {
-          nativeModules[nativeDepName] = require(nativeDepName);
-        }
+    const nativeModules = Object.keys(process.binding('natives')).reduce((nms, nativeModuleName) => {
+      if (!/^internal\/|_/.test(nativeModuleName)) {
+        nms[nativeModuleName] = require(nativeModuleName);
+      }
 
-        return nativeModules;
-      }, {})
-    );
+      return nms;
+    }, {});
+    d('Native modules', Object.keys(nativeModules));
+
+    return resolve(nativeModules);
   });
 };
 const getCustomModules = (containerRoot) => {
@@ -44,20 +44,27 @@ const getCustomModules = (containerRoot) => {
     next();
   });
 
-  return new Promise((resolve) => {
-    walker.on('end', resolve.bind(null, customModules));
+  return new Promise((resolve, reject) => {
+    walker.on('errors', (root, stats) => {
+      reject(stats.map(stat => stat.error));
+    });
+    walker.on('end', () => {
+      d('Custom modules', Object.keys(customModules));
+      resolve(customModules);
+    });
   });
 };
-const getNodeModules = () => {
-  const packageJsonModuleNames = Object.keys(require('./package.json').dependencies);
-  const packageJsonModules = packageJsonModuleNames.reduce((modules, moduleName) => {
-    modules[moduleName] = require(moduleName);
-
-    return modules;
-  }, {});
-
+const getNodeModules = (packageDir) => {
   return new Promise((resolve) => {
-    resolve(packageJsonModules);
+    const packageJsonModuleNames = Object.keys(require(`${packageDir}/package.json`).dependencies);
+    const packageJsonModules = packageJsonModuleNames.reduce((modules, moduleName) => {
+      modules[moduleName] = require.main.require(moduleName);
+
+      return modules;
+    }, {});
+    d('package.json modules', Object.keys(packageJsonModules));
+
+    return resolve(packageJsonModules);
   });
 };
 
@@ -71,7 +78,7 @@ module.exports = (options) => {
   return Promise
     .all([
       getNativeModules(),
-      getNodeModules(),
+      getNodeModules(process.cwd()),
       getCustomModules(join(process.cwd(), containerRoot))
     ])
     .then(function(moduleGroups) {
@@ -81,11 +88,12 @@ module.exports = (options) => {
 
       Object.assign(deps, nativeModules, nodeModules);
       forOwn(customModules, (module, path) => {
+        d(path);
         deps[path] = isFunction(module) ? module(deps) : module;
       });
       Object.freeze(deps);
-      deps[entry](initialState);
-      d('Bootstrapping done!');
+
+      return deps[entry](initialState);
     })
     .catch(e);
 };
