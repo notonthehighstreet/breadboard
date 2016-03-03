@@ -88,12 +88,14 @@ module.exports = (options) => {
 
       Object.assign(deps, nativeModules, nodeModules);
       forOwn(customModules, (module, path) => {
-        d(path);
         deps[path] = isFunction(module) ? module(deps) : module;
       });
       Object.freeze(deps);
 
-      return deps[entry](initialState);
+      return Promise.all([
+        deps[entry](initialState),
+        deps
+      ]);
     })
     .catch(e);
 };
