@@ -85,14 +85,16 @@ module.exports = (options) => {
       const nativeModules = moduleGroups[0];
       const nodeModules = moduleGroups[1];
       const customModules = moduleGroups[2];
-      let applicationEntry = deps[entry];
+      let applicationEntry;
 
       Object.assign(deps, nativeModules, nodeModules);
       forOwn(customModules, (module, path) => {
         deps[path] = isFunction(module) ? module(deps) : module;
       });
       Object.freeze(deps);
-      if (typeof entry === 'function') {
+
+      applicationEntry = deps[entry];
+      if (isFunction(entry)) {
         applicationEntry = entry(deps);
       }
 
