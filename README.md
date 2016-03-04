@@ -1,3 +1,4 @@
+![](http://i.imgur.com/3lFs20I.png)  
 # Breadboard
 
 Breadboard is an Inversion of Control container for Node.js applications.
