@@ -85,15 +85,19 @@ module.exports = (options) => {
       const nativeModules = moduleGroups[0];
       const nodeModules = moduleGroups[1];
       const customModules = moduleGroups[2];
+      let applicationEntry = deps[entry];
 
       Object.assign(deps, nativeModules, nodeModules);
       forOwn(customModules, (module, path) => {
         deps[path] = isFunction(module) ? module(deps) : module;
       });
       Object.freeze(deps);
+      if (typeof entry === 'function') {
+        applicationEntry = entry(deps);
+      }
 
       return Promise.all([
-        deps[entry](initialState),
+        applicationEntry(initialState),
         deps
       ]);
     })
