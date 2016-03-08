@@ -11,13 +11,14 @@ const e = debug('breadboard:error');
 
 module.exports = (options) => {
   const containerRoot = options.containerRoot;
+  const blacklist = options.blacklist || [];
 
   d('Starting bootstrap');
 
   return Promise
     .all([
       getNativeModules(),
-      getDependencyModules(process.cwd()),
+      getDependencyModules(process.cwd(), blacklist),
       getAppModules(join(process.cwd(), containerRoot))
     ])
     .then(createInjector({
