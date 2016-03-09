@@ -1,5 +1,5 @@
-import test from 'ava';
-import subject from '../lib/getDependencyModules';
+const test = require('ava');
+const subject = require('../lib/getDependencyModules');
 
 const packageDir = '../spec/fixtures';
 
@@ -36,4 +36,3 @@ test.cb('returns empty object if specified module is not found', t => {
     t.end();
   });
 });
-

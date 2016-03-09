@@ -1,5 +1,5 @@
-import test from 'ava';
-import subject from '../lib/getNativeModules';
+const test = require('ava');
+const subject = require('../lib/getNativeModules');
 
 test.cb('when only non-internal native modules are provided, all modules are returned', t => {
   const moduleKey = '../spec/fixtures/fakeNativeModule';

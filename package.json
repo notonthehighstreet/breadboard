@@ -4,7 +4,9 @@
   "description": "Lightweight IOC container for Node.js",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/ava/cli.js"
+    "test": "./node_modules/ava/cli.js",
+    "coverage": "./node_modules/.bin/nyc ./node_modules/ava/cli.js --all",
+    "report": "npm run coverage && ./node_modules/.bin/nyc report --reporter=html"
   },
   "author": "Marek Stasikowski and Simon Adcock <marekstasikowski+simonadcock@notonthehighstreet.com>",
   "license": "MIT",
@@ -17,13 +19,16 @@
   "ava": {
     "files": [
       "**/*.spec.js"
-    ],
-    "require": [
-      "babel-register"
     ]
   },
+  "nyc": {
+    "include": [
+      "lib/**/*.js"
+    ],
+    "reporter": "html"
+  },
   "devDependencies": {
-    "babel-register": "6.6.5",
+    "nyc": "^6.0.0",
     "sinon": "^1.17.3"
   }
 }

@@ -1,5 +1,5 @@
-import test from 'ava';
-import subject from '../lib/loadModule';
+const test = require('ava');
+const subject = require('../lib/loadModule');
 const containerRoot = 'fixtures';
 const moduleDirectory = '../spec/fixtures';
 
@@ -27,5 +27,5 @@ test('loading a non JS/JSON file it throws an error', t => {
   const fileStat = {
     name: 'animation.swf'
   };
-  t.throws(subject.bind(containerRoot, moduleDirectory, fileStat));
+  t.throws(subject.bind(null, containerRoot, moduleDirectory, fileStat));
 });

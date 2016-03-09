@@ -1,5 +1,5 @@
-import test from 'ava';
-import subject from '../lib/getModuleKey';
+const test = require('ava');
+const subject = require('../lib/getModuleKey');
 
 test('module is a JavaScript file, it does not include the file extension', t => {
   const relativeModulePath = 'containerRoot/lib/modules';
