@@ -6,7 +6,8 @@
   "scripts": {
     "test": "./node_modules/ava/cli.js",
     "coverage": "./node_modules/.bin/nyc ./node_modules/ava/cli.js --all",
-    "report": "npm run coverage && ./node_modules/.bin/nyc report --reporter=html"
+    "report": "npm run coverage && ./node_modules/.bin/nyc report --reporter=html",
+    "codeclimate": "npm run coverage -- --reporter=lcov --reporter=text-lcov | ./node_modules/codeclimate-test-reporter/bin/codeclimate.js"
   },
   "author": "Marek Stasikowski and Simon Adcock <marekstasikowski+simonadcock@notonthehighstreet.com>",
   "license": "MIT",
@@ -24,10 +25,10 @@
   "nyc": {
     "include": [
       "lib/**/*.js"
-    ],
-    "reporter": "html"
+    ]
   },
   "devDependencies": {
+    "codeclimate-test-reporter": "^0.3.1",
     "nyc": "^6.0.0",
     "sinon": "^1.17.3"
   }
