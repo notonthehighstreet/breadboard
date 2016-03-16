@@ -7,9 +7,7 @@ test('loads a javascript module and assigns a key to it', t => {
   const fileStat = {
     name: 'fakeModule.js'
   };
-  const expectedModule = {
-    '/fakeModule': require('./fixtures/fakeModule')
-  };
+  const expectedModule = require('./fixtures/fakeModule')
   const module = subject(containerRoot, moduleDirectory, fileStat);
   t.same(module, expectedModule);
 });
@@ -17,9 +15,7 @@ test('loads a JSON module and assigns a key to it', t => {
   const fileStat = {
     name: 'fakeConfig.json'
   };
-  const expectedModule = {
-    '/fakeConfig.json': require('./fixtures/fakeConfig.json')
-  };
+  const expectedModule = require('./fixtures/fakeConfig.json')
   const module = subject(containerRoot, moduleDirectory, fileStat);
   t.same(module, expectedModule);
 });
