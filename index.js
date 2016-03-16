@@ -25,5 +25,9 @@ module.exports = (options) => {
       entry: options.entry,
       initialState: options.initialState
     }))
-    .catch(e);
+    .catch((err) => {
+      e(err);
+
+      return Promise.reject(err);
+    });
 };
