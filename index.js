@@ -25,7 +25,8 @@ module.exports = (options) => {
     ])
     .then(createInjector({
       entry: options.entry,
-      initialState: options.initialState
+      initialState: options.initialState,
+      substitutes: options.substitutes
     }))
     .catch((err) => {
       e(err);
