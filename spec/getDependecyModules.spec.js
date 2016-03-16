@@ -36,3 +36,13 @@ test.cb('returns empty object if specified module is not found', t => {
     t.end();
   });
 });
+test.cb('does not load modules specified in both package.json and substitutes', t => {
+  const substitutes = ['../../../spec/fixtures/fakeModule'];
+  const promise = subject(packageDir, [], substitutes);
+
+  t.plan(1);
+  promise.then((packageJsonModules) => {
+    t.same(packageJsonModules, {});
+    t.end();
+  });
+});
