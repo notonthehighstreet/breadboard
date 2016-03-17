@@ -12,18 +12,21 @@ const e = debug('breadboard:error');
 module.exports = (options) => {
   const containerRoot = options.containerRoot;
   const blacklist = options.blacklist || [];
+  const substitutes = options.substitutes || {};
+  const substituteKeys = Object.keys(substitutes);
 
   d('Starting bootstrap');
 
   return Promise
     .all([
-      getNativeModules(),
-      getDependencyModules(process.cwd(), blacklist),
-      getAppModules(join(process.cwd(), containerRoot))
+      getNativeModules(substituteKeys),
+      getDependencyModules(process.cwd(), blacklist, substituteKeys),
+      getAppModules(join(process.cwd(), containerRoot), substituteKeys)
     ])
     .then(createInjector({
       entry: options.entry,
-      initialState: options.initialState
+      initialState: options.initialState,
+      substitutes: options.substitutes
     }))
     .catch((err) => {
       e(err);

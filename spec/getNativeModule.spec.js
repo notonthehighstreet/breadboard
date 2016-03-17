@@ -1,46 +1,63 @@
 const test = require('ava');
+const sinon = require('sinon');
 const subject = require('../lib/getNativeModules');
+const sandbox = sinon.sandbox.create();
+const internalModule = 'internal/fakeNativeModule';
+const nonInternalModule = '../spec/fixtures/fakeNativeModule';
+const modules = {
+  '../spec/fixtures/fakeNativeModule': require('../spec/fixtures/fakeNativeModule'),
+  'internal/fakeNativeModule': {}
+};
+const bindingStub = sandbox.stub(process, 'binding');
 
-test.cb('when only non-internal native modules are provided, all modules are returned', t => {
-  const moduleKey = '../spec/fixtures/fakeNativeModule';
-  const natives = [moduleKey];
-  const expectedNativeModule = require('./fixtures/fakeNativeModule');
-  const promise = subject(natives);
+bindingStub.returns(modules);
+test.afterEach(() => {
+  sandbox.reset();
+});
+test.after(() => {
+  sandbox.restore();
+});
+test.cb('non-internal native modules are returned', t => {
+  const fakeNonInternalModule = require('./fixtures/fakeNativeModule');
+  const promise = subject([]);
 
   t.plan(1);
-  promise.then((nativeModules) => {
-    t.same(nativeModules[moduleKey], expectedNativeModule);
-    t.end();
-  });
+  promise
+    .then((nativeModules) => {
+      t.same(nativeModules[nonInternalModule], fakeNonInternalModule);
+      t.end();
+    })
+    .catch((err) => {
+      t.fail(err);
+      t.end();
+    });
 });
 test.cb('when only internal native modules are provided, no modules are returned', t => {
-  const moduleKey = 'internal/fakeNativeModule';
-  const natives = [moduleKey];
-  const promise = subject(natives);
+  const promise = subject([]);
 
   t.plan(1);
-  promise.then((nativeModules) => {
-    t.same(nativeModules[moduleKey], undefined);
-    t.end();
-  }).catch((err) => {
-    t.fail(err);
-    t.end();
-  });
+  promise
+    .then((nativeModules) => {
+      t.same(nativeModules[internalModule], undefined);
+      t.end();
+    })
+    .catch((err) => {
+      t.fail(err);
+      t.end();
+    });
 });
-test.cb('when both internal and non-internal native modules are provided, only non-internal modules are returned', t => {
-  const internalModuleKey = 'internal/fakeNativeModule';
-  const nonInternalModuleKey = '../spec/fixtures/fakeNativeModule';
-  const natives = [internalModuleKey, nonInternalModuleKey];
-  const expectedNativeModule = require('./fixtures/fakeNativeModule');
-  const promise = subject(natives);
+test.cb('does not add substitutes to deps', t => {
+  const substitutes = [nonInternalModule];
+  const promise = subject(substitutes);
 
-  t.plan(2);
-  promise.then((nativeModules) => {
-    t.same(nativeModules[internalModuleKey], undefined);
-    t.same(nativeModules[nonInternalModuleKey], expectedNativeModule);
-    t.end();
-  }).catch((err) => {
-    t.fail(err);
-    t.end();
-  });
+  t.plan(1);
+  promise
+    .then((nativeModules) => {
+      t.same(nativeModules[nonInternalModule], undefined);
+      t.end();
+    })
+    .catch((err) => {
+      t.fail(err);
+      t.end();
+    });
 });
