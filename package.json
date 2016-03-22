@@ -14,7 +14,9 @@
   "dependencies": {
     "ava": "0.12.0",
     "debug": "2.2.0",
+    "harmony-reflect": "1.4.4",
     "lodash": "4.5.1",
+    "sinon": "1.17.3",
     "walk": "2.3.9"
   },
   "ava": {
