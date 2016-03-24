@@ -195,7 +195,7 @@ const debugSpy = sandbox.spy();
 
 deps.debug.returns(debugSpy);
 deps['/widgets/createDough'].returns(mockDough);
-describe.only('Main', () => {
+describe('Main', () => {
   afterEach(() => {
     sandbox.reset();
   });
