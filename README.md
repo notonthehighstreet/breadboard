@@ -85,7 +85,7 @@ Will be called as the entry point module, with resolved dependencies as the argu
 #### `options.containerRoot` (String)
 Path relative to the current working directory, from which all module keys will be resolved
 #### `options.initialState` (Object)
-The argument the entry point function will be called with.
+The argument the `entry` function will be called with.
 #### `options.blacklist` (Array&lt;String&gt;)
 List of modules from your `package.json` which you wish Breadboard not to load. If you want to defer a `require` call to a 3rd party module, put it in the `blacklist` and `require` manually in your code.
 #### `options.substitutes` (Object)
