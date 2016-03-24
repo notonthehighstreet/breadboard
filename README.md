@@ -2,14 +2,14 @@
 # Breadboard
 Breadboard is an opinionated inversion of control container for Node.js applications.
 
-Breadboard will require all your application's dependencies defined in `package.json`, all Node native modules and all of your application's modules and store them in a `dependencies` object. The object is exposed to your application's modules by calling the modules as functions, passing the dependencies as an argument. As such, your modules are expected to be wrapped in an extra function returning the desired export value, which Breadboard then calls on application start.
-
 ## Motivation
 * Working with `require` is less than ideal.
   * The same module will have a different key depending on the path of the requiring module.
   * Testing a module in isolation, ie. mocking its dependencies, requires hacky solutions that hijack `require` calls. This approach is indeterministic, depending on various seemingly unrelated conditions around how the the module you want to mock was defined.
 * Discouraging managing state of the app through side effects when `require`ing.
 * Single function call to auto-mock a module's dependencies in your tests.
+
+Breadboard will require all your application's dependencies defined in `package.json`, all Node native modules and all of your application's modules and store them in a `dependencies` object. The object is exposed to your application's modules by calling the modules as functions, passing the dependencies as an argument. As such, your modules are expected to be wrapped in an extra function returning the desired export value, which Breadboard then calls on application start.
 
 ## Install
 ```
@@ -18,14 +18,31 @@ npm install breadboard
 
 ## Example of a module in your application
 
-**NOTE:** The destructuring of dependencies has to happen within your returned module function, like in the below example. The wrapper function receives a reference to the `dependencies` object which will not be fully populated by the time the wrapper function is executed, as Breadboard iterates over a flat list of your app's modules. So if module A depends on module B, by the time `dependencies` are injected into A, they might not contain a reference to module B yet. `dependencies` are fully resolved when the entry point of the whole application is executed, but not sooner.
+Consider this CommonJS module:
+```js
+//startServer.js
 
+const d = require('debug')('myApp');
+const createServer = require('./lib/createServer');
+
+module.exports = () => {
+  const server = createServer();
+
+  server.listen(80, () => {
+    d('Server listening on port 80');
+  });
+
+  return server;
+};
+```
+
+The Breadboard equivalent would be:
 ```js
 //startServer.js
 
 // wrap module in factory function
 module.exports = (dependencies) => {
-  // return the core functionality of the module
+  // return the core functionality of the module as a function
   return () => {
     // destructure dependencies to get the modules needed
     const {
@@ -33,6 +50,7 @@ module.exports = (dependencies) => {
       '/lib/createServer': createServer
     } = dependencies;
     const server = createServer();
+    const d = debug('myApp');
 
     server.listen(80, () => {
       debug('Server listening on port 80');
@@ -42,6 +60,8 @@ module.exports = (dependencies) => {
   };
 };
 ```
+
+**NOTE:** The destructuring of dependencies has to happen within your returned module function, like in the above example. The wrapper function receives a reference to the `dependencies` object which will not be fully populated by the time the wrapper function is executed, as Breadboard iterates over a flat list of your app's modules. So if module A depends on module B, by the time `dependencies` are injected into A, they might not contain a reference to module B yet. `dependencies` are fully resolved when the entry point of the whole application is executed, but not sooner.
 
 To start your application:
 ```js
@@ -58,11 +78,9 @@ breadboard({
 }).then((entryPointReturnValue, dependencies) => {
   console.log('Application started', entryPointReturnValue, dependencies);
 });
-
 ```
 
 ## Module keys
-
 Module keys in a Breadboard app are static, ie. are always relative to the container's root folder, starting with `/`, and always using `/` as path separators, no matter the platform. Consider these example module keys:
 ```
 /lib/getUser
