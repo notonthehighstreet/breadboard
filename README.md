@@ -84,6 +84,8 @@ Module key for the entry point of the application.
 Will be called as the entry point module, with resolved dependencies as the argument.
 #### `options.containerRoot` (String)
 Path relative to the current working directory, from which all module keys will be resolved
+#### `options.initialState` (Object)
+The argument the entry point function will be called with.
 #### `options.blacklist` (Array&lt;String&gt;)
 List of modules from your `package.json` which you wish Breadboard not to load. If you want to defer a `require` call to a 3rd party module, put it in the `blacklist` and `require` manually in your code.
 #### `options.substitutes` (Object)
@@ -148,7 +150,7 @@ describe('Main', () => {
 `autoMock` automatically replaces every dependency of a given Breadboard module with a [Sinon.JS stub](http://sinonjs.org/docs/#stubs).
 
 **NOTE** `autoMock` relies on ES6 Proxies and on a [Proxy polyfill](https://github.com/tvcutsem/harmony-reflect). This requires Node to be run with the `--harmony-proxies` flag. Supposing you used Mocha as the test runner in your project, you would execute:
-`node --harmony-proxies ./node_modules/mocha/bin/_mocha --opts ./.mocha`. Proxies have been implemented in V8 4.9, which has not yet landed in Node. Until then this caveat will require the `--harmony-proxies` flag.
+`node --harmony-proxies ./node_modules/mocha/bin/_mocha`. Proxies have been implemented in V8 4.9, which has not yet landed in Node. Until then this caveat will require the `--harmony-proxies` flag.
 ### `autoMock` API
 
 `autoMock(factory, options)`
