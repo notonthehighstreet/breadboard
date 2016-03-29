@@ -7,12 +7,16 @@
     "test": "./node_modules/ava/cli.js",
     "coverage": "./node_modules/.bin/nyc ./node_modules/ava/cli.js --all",
     "report": "npm run coverage && ./node_modules/.bin/nyc report --reporter=html",
-    "codeclimate": "npm run coverage -- --reporter=lcov --reporter=text-lcov | ./node_modules/codeclimate-test-reporter/bin/codeclimate.js"
+    "codeclimate": "npm run coverage -- --reporter=lcov --reporter=text-lcov | ./node_modules/codeclimate-test-reporter/bin/codeclimate.js",
+    "lint": "./node_modules/eslint/bin/eslint.js ."
   },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
   "author": "Marek Stasikowski and Simon Adcock <marekstasikowski+simonadcock@notonthehighstreet.com>",
   "license": "MIT",
   "dependencies": {
-    "ava": "0.12.0",
     "debug": "2.2.0",
     "harmony-reflect": "1.4.4",
     "lodash": "4.5.1",
@@ -22,17 +26,28 @@
   "ava": {
     "files": [
       "**/*.spec.js"
+    ],
+    "require": [
+      "babel-register"
     ]
   },
   "nyc": {
     "include": [
       "lib/**/*.js"
+    ],
+    "exclude": [
+      "lib/autoMock.js"
     ]
   },
   "devDependencies": {
+    "ava": "0.12.0",
+    "babel-eslint": "6.0.0",
+    "chance": "1.0.1",
     "codeclimate-test-reporter": "^0.3.1",
     "eslint": "^2.4.0",
+    "mock-require": "1.2.1",
     "nyc": "^6.0.0",
+    "pre-commit": "1.1.2",
     "sinon": "^1.17.3"
   }
 }

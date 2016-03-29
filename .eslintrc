@@ -1,11 +1,12 @@
 {
   "extends": "eslint:recommended",
+  "parser": "babel-eslint",
   "env": {
     "node": true,
     "es6": true
   },
-  "ecmaFeatures": {
-    "modules": true
+  "parserOptions": {
+    "sourceType": "module"
   },
   "rules": {
     "quotes": [2, "single"],
