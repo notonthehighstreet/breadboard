@@ -1,4 +1,5 @@
-![](http://i.imgur.com/3lFs20I.png)  
+![](http://i.imgur.com/3lFs20I.png)
+  [![Test Coverage](https://codeclimate.com/repos/56e00704db68c03776006380/badges/bb9a78dab8325eafba2c/coverage.svg)](https://codeclimate.com/repos/56e00704db68c03776006380/coverage)
 # Breadboard
 Breadboard is an opinionated inversion of control container for Node.js applications.
 
