@@ -1,4 +1,12 @@
 language: node_js
 script: npm run lint
 after_success:
-  - npm run codeclimate
+- npm run codeclimate
+deploy:
+  provider: npm
+  email: tech.team@notonthehighstreet.com
+  api_key:
+    secure: k6wmHDg3OVI1z8zEAbNKaWGyREODuvMzWAKz/XQxUacci1Jdvj6sZVWkSpJouczodxVwa5qRUk3s5QeHJm7NMR4F+kym6KTOPpNOzarse13Oorkda7viEhlB5jKI2dYxVsBB0ccTyb2Bsw6VrnwuEVLVoi5sZ58xEhEwfikUbObwGZvF78Apsu6V4ssZyEQZyvfZR3p5bGWHY9n8V48/s8OK93tXj7CCa+dsITzxnPGHu/MYnCud4iJdoxDhQQkxY4pys9Wh4TofovANx8jq73kQNvPHwpWqOvIiKv+OjV3mZDsaedxJZOAmNu3w3vyMygiHNyidPMVCLpYYZC/SWwaRFoJGJ2ouNszTnFIlWyKqd3o2dW7xm1Ta7ScDc4+jg30d/Du3HqiiZdij1Uf9gOxKCWu9JXr6gURMDDVmzSOujhA9C0ws9JPW1UAxH9n9SUGEivV39ZsYvST7wHNogEocZfubNxjKW+D/2+CSvnQuKYM+1PNgzduHlNH9NHb3wcr8e+iIbGKR71LBc+1cpkLNn5XXA6jhjemoloUB3MoK4YojLZjX6seDVgo8ezVSEc2W4enWONb1xXYtSIrl5N0rWOGrVR/4d6V25/DeVUWNSQiG1utRP26J4A4lbQsMGE3xOTCVaJlsWrqDRI0MQidxVC0ob3NWFS6Yudi/2AM=
+  on:
+    tags: true
+    repo: notonthehighstreet/breadboard
