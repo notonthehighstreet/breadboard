@@ -17,47 +17,20 @@ test.afterEach(() => {
 test.after(() => {
   sandbox.restore();
 });
-test.cb('non-internal native modules are returned', t => {
+test('non-internal native modules are returned', async t => {
   const fakeNonInternalModule = require('./fixtures/fakeNativeModule');
-  const promise = subject([]);
+  const nativeModules = await subject([]);
 
-  t.plan(1);
-  promise
-    .then((nativeModules) => {
-      t.same(nativeModules[nonInternalModule], fakeNonInternalModule);
-      t.end();
-    })
-    .catch((err) => {
-      t.fail(err);
-      t.end();
-    });
+  t.same(nativeModules[nonInternalModule], fakeNonInternalModule);
 });
-test.cb('when only internal native modules are provided, no modules are returned', t => {
-  const promise = subject([]);
+test('when only internal native modules are provided, no modules are returned', async t => {
+  const nativeModules = await subject([]);
 
-  t.plan(1);
-  promise
-    .then((nativeModules) => {
-      t.same(nativeModules[internalModule], undefined);
-      t.end();
-    })
-    .catch((err) => {
-      t.fail(err);
-      t.end();
-    });
+  t.same(nativeModules[internalModule], undefined);
 });
-test.cb('does not add substitutes to deps', t => {
+test('does not add substitutes to deps', async t => {
   const substitutes = [nonInternalModule];
-  const promise = subject(substitutes);
+  const nativeModules = await subject(substitutes);
 
-  t.plan(1);
-  promise
-    .then((nativeModules) => {
-      t.same(nativeModules[nonInternalModule], undefined);
-      t.end();
-    })
-    .catch((err) => {
-      t.fail(err);
-      t.end();
-    });
+  t.same(nativeModules[nonInternalModule], undefined);
 });

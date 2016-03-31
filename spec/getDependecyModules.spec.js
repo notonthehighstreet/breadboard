@@ -1,86 +1,46 @@
 const test = require('ava');
 const subject = require('../lib/getDependencyModules');
 const packageDir = '../spec/fixtures';
-const createOnReject = (t) => {
-  return (err) => {
-    t.end();
-    t.fail(err);
-  };
-};
 const chance = new require('chance')();
 
-test.cb('loads modules specified in package.json', t => {
-  const promise = subject(packageDir);
+test('loads modules specified in package.json', async t => {
+  const expectedModules = {
+    '../../../spec/fixtures/fakeModule': require('./fixtures/fakeModule')
+  };
 
-  t.plan(1);
-  promise
-    .then((packageJsonModules) => {
-      const expectedModules = {
-        '../../../spec/fixtures/fakeModule': require('./fixtures/fakeModule')
-      };
-
-      t.same(packageJsonModules, expectedModules);
-      t.end();
-    })
-    .catch(createOnReject(t));
+  t.same(await subject(packageDir), expectedModules);
 });
-test.cb('does not load modules specified in both package.json and blacklist', t => {
+test('does not load modules specified in both package.json and blacklist', async t => {
   const blacklist = ['../../../spec/fixtures/fakeModule'];
-  const promise = subject(packageDir, blacklist);
 
-  t.plan(1);
-  promise
-    .then((packageJsonModules) => {
-      t.same(packageJsonModules, {});
-      t.end();
-    })
-    .catch(createOnReject(t));
+  t.same(await subject(packageDir, blacklist), {});
 });
-test.cb('throws if specified module is not found', t => {
+test('throws if specified module is not found', async t => {
   const brokenPackageDir = '../spec/fixtures/broken';
-  const promise = subject(brokenPackageDir);
+  const packageJsonModules = await subject(brokenPackageDir);
 
-  t.plan(1);
-  promise
-    .then((packageJsonModules) => {
-      t.throws(() => {
-        packageJsonModules['./broken/path/to/module'];
-      });
-      t.end();
-    })
-    .catch(createOnReject(t));
+  t.throws(() => {
+    packageJsonModules['./broken/path/to/module'];
+  });
 });
-test.cb('throws if package.json doesn\'t exist', t => {
+test('throws if package.json doesn\'t exist', t => {
   const nonExistentPackageDir = `../spec/fixtures/${chance.word()}`;
-  const promise = subject(nonExistentPackageDir);
 
-  t.plan(1);
-  promise
+  return subject(nonExistentPackageDir)
     .catch((e) => {
       t.ok(e instanceof Error);
-      t.end();
     });
 });
-test.cb('throws if package.json doesn\'t include dependencies', t => {
+test('throws if package.json doesn\'t include dependencies', t => {
   const packageWithoutDepsDir = '../spec/fixtures/packageJsonWithoutDependencies';
-  const promise = subject(packageWithoutDepsDir);
 
-  t.plan(1);
-  promise
+  return subject(packageWithoutDepsDir)
     .catch((e) => {
       t.ok(e instanceof Error);
-      t.end();
     });
 });
-test.cb('does not load modules specified in both package.json and substitutes', t => {
+test('does not load modules specified in both package.json and substitutes', async t => {
   const substitutes = ['../../../spec/fixtures/fakeModule'];
-  const promise = subject(packageDir, [], substitutes);
 
-  t.plan(1);
-  promise
-    .then((packageJsonModules) => {
-      t.same(packageJsonModules, {});
-      t.end();
-    })
-    .catch(createOnReject(t));
+  t.same(await subject(packageDir, [], substitutes), {});
 });
