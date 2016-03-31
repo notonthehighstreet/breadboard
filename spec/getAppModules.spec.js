@@ -65,18 +65,17 @@ test('when walker encounters a file that has no specified substitute. a module g
   getModuleKeyMock.returns(fakeModuleName);
   walkerStub.on.withArgs('end').yields();
   customModules = await subject(fakeContainerRoot);
-  t.ok(customModules[fakeModuleName] === fakeModule);
+  t.same(customModules[fakeModuleName], fakeModule);
 });
-test.cb('when walker encounters errors, promise gets rejected', t => {
+test('when walker encounters errors, promise gets rejected', t => {
   const fakeStatError = {};
 
-  t.plan(1);
   walkerStub.on.withArgs('errors').yields(null, [{
     error: fakeStatError
   }]);
-  subject(fakeContainerRoot)
+
+  return subject(fakeContainerRoot)
     .catch(errors => {
-      t.ok(errors[0] === fakeStatError);
-      t.end();
+      t.same(errors[0], fakeStatError);
     });
 });
