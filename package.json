@@ -1,8 +1,9 @@
 {
   "name": "breadboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight IOC container for Node.js",
   "main": "index.js",
+  "repository": "notonthehighstreet/breadboard",
   "scripts": {
     "test": "./node_modules/ava/cli.js",
     "coverage": "./node_modules/.bin/nyc ./node_modules/ava/cli.js --all",
