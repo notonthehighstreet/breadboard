@@ -1,7 +1,8 @@
 ![](http://i.imgur.com/3lFs20I.png)
 
 # Breadboard
-[![Test Coverage](https://codeclimate.com/repos/56e00704db68c03776006380/badges/bb9a78dab8325eafba2c/coverage.svg)](https://codeclimate.com/repos/56e00704db68c03776006380/coverage)
+[![Code Climate](https://codeclimate.com/github/notonthehighstreet/breadboard/badges/gpa.svg)](https://codeclimate.com/github/notonthehighstreet/breadboard)
+[![Test Coverage](https://codeclimate.com/github/notonthehighstreet/breadboard/badges/coverage.svg)](https://codeclimate.com/github/notonthehighstreet/breadboard/coverage)
 [![Build Status](https://travis-ci.org/notonthehighstreet/breadboard.svg?branch=master)](https://travis-ci.org/notonthehighstreet/breadboard)
 
 Breadboard is an opinionated inversion of control container for Node.js applications.
