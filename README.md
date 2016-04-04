@@ -58,7 +58,7 @@ module.exports = (dependencies) => {
     const d = debug('myApp');
 
     server.listen(80, () => {
-      debug('Server listening on port 80');
+      d('Server listening on port 80');
     });
 
     return server;
