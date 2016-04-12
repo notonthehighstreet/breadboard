@@ -34,7 +34,8 @@
   },
   "nyc": {
     "include": [
-      "lib/**/*.js"
+      "lib/**/*.js",
+      "index.js"
     ],
     "exclude": [
       "lib/autoMock.js"

@@ -1,11 +1,11 @@
 const test = require('ava');
-const subject = require('../lib/getDependencyModules');
-const packageDir = '../spec/fixtures';
+const subject = require('../../lib/getDependencyModules');
+const packageDir = '../../spec/fixtures';
 const chance = new require('chance')();
 
 test('loads modules specified in package.json', async t => {
   const expectedModules = {
-    '../../../spec/fixtures/fakeModule': require('./fixtures/fakeModule')
+    '../../../spec/fixtures/fakeModule': require('../fixtures/fakeModule')
   };
 
   t.same(await subject(packageDir), expectedModules);
@@ -16,7 +16,7 @@ test('does not load modules specified in both package.json and blacklist', async
   t.same(await subject(packageDir, blacklist), {});
 });
 test('throws if specified module is not found', async t => {
-  const brokenPackageDir = '../spec/fixtures/broken';
+  const brokenPackageDir = '../../spec/fixtures/broken';
   const packageJsonModules = await subject(brokenPackageDir);
 
   t.throws(() => {

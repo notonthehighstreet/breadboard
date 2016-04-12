@@ -1,6 +1,6 @@
 const test = require('ava');
 const sinon = require('sinon');
-const builder = require('../lib/createInjector');
+const builder = require('../../lib/createInjector');
 const sandbox = sinon.sandbox.create();
 const initialState = {foo: 'bar'};
 const resolved = {};

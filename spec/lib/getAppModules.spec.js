@@ -23,10 +23,10 @@ test.beforeEach(() => {
   walkerStub.on.withArgs('file').yields(chance.word(), fakeFileStat, () => {
   });
   mock('walk', walkMock);
-  mock('../lib/loadModule', loadModuleMock);
-  mock('../lib/getModuleKey', getModuleKeyMock);
+  mock('../../lib/loadModule', loadModuleMock);
+  mock('../../lib/getModuleKey', getModuleKeyMock);
   fakeContainerRoot = chance.word();
-  subject = require('../lib/getAppModules');
+  subject = require('../../lib/getAppModules');
 });
 test.afterEach(() => {
   mock.stopAll();
