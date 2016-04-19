@@ -41,7 +41,7 @@ test('module is not a function, module is added to deps', async t => {
   const moduleGroups = [{}, {}, customModules];
   const [, appDeps] = await subject(moduleGroups);
 
-  t.same(appDeps, customModules);
+  t.deepEqual(appDeps, customModules);
 });
 test('native modules are added to deps', async t => {
   const subject = builder({entry: entry, initialState: initialState});
@@ -49,7 +49,7 @@ test('native modules are added to deps', async t => {
   const moduleGroups = [{}, nativeModules, {}];
   const [, appDeps] = await subject(moduleGroups);
 
-  t.same(appDeps, nativeModules);
+  t.deepEqual(appDeps, nativeModules);
 });
 test('node modules are added to deps', async t => {
   const subject = builder({entry: entry, initialState: initialState});
@@ -57,7 +57,7 @@ test('node modules are added to deps', async t => {
   const moduleGroups = [nodeModules, {}, {}];
   const [, appDeps] = await subject(moduleGroups);
 
-  t.same(appDeps, nodeModules);
+  t.deepEqual(appDeps, nodeModules);
 });
 test('deps are frozen', t => {
   const subject = builder({entry: entry, initialState: initialState});

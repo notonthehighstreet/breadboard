@@ -8,12 +8,12 @@ test('loads modules specified in package.json', async t => {
     '../../../spec/fixtures/fakeModule': require('../fixtures/fakeModule')
   };
 
-  t.same(await subject(packageDir), expectedModules);
+  t.deepEqual(await subject(packageDir), expectedModules);
 });
 test('does not load modules specified in both package.json and blacklist', async t => {
   const blacklist = ['../../../spec/fixtures/fakeModule'];
 
-  t.same(await subject(packageDir, blacklist), {});
+  t.deepEqual(await subject(packageDir, blacklist), {});
 });
 test('throws if specified module is not found', async t => {
   const brokenPackageDir = '../../spec/fixtures/broken';
@@ -28,7 +28,7 @@ test('throws if package.json doesn\'t exist', t => {
 
   return subject(nonExistentPackageDir)
     .catch((e) => {
-      t.ok(e instanceof Error);
+      t.truthy(e instanceof Error);
     });
 });
 test('throws if package.json doesn\'t include dependencies', t => {
@@ -36,11 +36,11 @@ test('throws if package.json doesn\'t include dependencies', t => {
 
   return subject(packageWithoutDepsDir)
     .catch((e) => {
-      t.ok(e instanceof Error);
+      t.truthy(e instanceof Error);
     });
 });
 test('does not load modules specified in both package.json and substitutes', async t => {
   const substitutes = ['../../../spec/fixtures/fakeModule'];
 
-  t.same(await subject(packageDir, [], substitutes), {});
+  t.deepEqual(await subject(packageDir, [], substitutes), {});
 });

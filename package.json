@@ -8,7 +8,7 @@
   },
   "repository": "notonthehighstreet/breadboard",
   "scripts": {
-    "test": "./node_modules/ava/cli.js",
+    "test": "./node_modules/ava/cli.js --serial",
     "coverage": "./node_modules/.bin/nyc ./node_modules/ava/cli.js --all",
     "report": "npm run coverage && ./node_modules/.bin/nyc report --reporter=html",
     "codeclimate": "npm run coverage -- --reporter=lcov --reporter=text-lcov | ./node_modules/codeclimate-test-reporter/bin/codeclimate.js",

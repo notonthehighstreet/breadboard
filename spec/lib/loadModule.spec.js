@@ -8,7 +8,7 @@ test('creates a getter for a CommonJS module', t => {
   };
   const expectedModule = require('../fixtures/fakeModule');
   const module = subject(moduleDirectory, fileStat)();
-  t.same(module, expectedModule);
+  t.deepEqual(module, expectedModule);
 });
 test('creates a getter for a JSON file', t => {
   const fileStat = {
@@ -16,7 +16,7 @@ test('creates a getter for a JSON file', t => {
   };
   const expectedModule = require('../fixtures/fakeConfig.json');
   const module = subject(moduleDirectory, fileStat)();
-  t.same(module, expectedModule);
+  t.deepEqual(module, expectedModule);
 });
 test('loading a non JS/JSON file it throws an error', t => {
   const fileStat = {

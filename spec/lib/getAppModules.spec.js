@@ -35,7 +35,7 @@ test.afterEach(() => {
 
 test('creates a directory walker', t => {
   subject(fakeContainerRoot);
-  t.ok(walkMock.walk.calledWithExactly(fakeContainerRoot));
+  t.truthy(walkMock.walk.calledWithExactly(fakeContainerRoot));
 });
 test('does not throw when no substitutes defined', t => {
   t.notThrows(() => {
@@ -47,14 +47,14 @@ test('when walker encounters a file it continues the walk', t => {
 
   walkerStub.on.withArgs('file').yields(chance.word(), fakeFileStat, nextSpy);
   subject(fakeContainerRoot);
-  t.ok(nextSpy.calledOnce);
+  t.truthy(nextSpy.calledOnce);
 });
 test('when walker encounters a file that has a specified substitute', async t => {
   const fakeModuleName = chance.word();
 
   getModuleKeyMock.returns(fakeModuleName);
   walkerStub.on.withArgs('end').yields();
-  t.same(await subject(fakeContainerRoot, [fakeModuleName]), {});
+  t.deepEqual(await subject(fakeContainerRoot, [fakeModuleName]), {});
 });
 test('when walker encounters a file that has no specified substitute. a module getter is registered', async t => {
   const fakeModule = {};
@@ -65,7 +65,7 @@ test('when walker encounters a file that has no specified substitute. a module g
   getModuleKeyMock.returns(fakeModuleName);
   walkerStub.on.withArgs('end').yields();
   customModules = await subject(fakeContainerRoot);
-  t.same(customModules[fakeModuleName], fakeModule);
+  t.deepEqual(customModules[fakeModuleName], fakeModule);
 });
 test('when walker encounters errors, promise gets rejected', t => {
   const fakeStatError = {};
@@ -76,6 +76,6 @@ test('when walker encounters errors, promise gets rejected', t => {
 
   return subject(fakeContainerRoot)
     .catch(errors => {
-      t.same(errors[0], fakeStatError);
+      t.deepEqual(errors[0], fakeStatError);
     });
 });
