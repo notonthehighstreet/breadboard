@@ -1,6 +1,6 @@
 {
   "name": "breadboard",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Lightweight IOC container for Node.js",
   "main": "index.js",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "repository": "notonthehighstreet/breadboard",
   "scripts": {
-    "test": "./node_modules/ava/cli.js",
+    "test": "./node_modules/ava/cli.js --serial",
     "coverage": "./node_modules/.bin/nyc ./node_modules/ava/cli.js --all",
     "report": "npm run coverage && ./node_modules/.bin/nyc report --reporter=html",
     "codeclimate": "npm run coverage -- --reporter=lcov --reporter=text-lcov | ./node_modules/codeclimate-test-reporter/bin/codeclimate.js",
@@ -34,7 +34,8 @@
   },
   "nyc": {
     "include": [
-      "lib/**/*.js"
+      "lib/**/*.js",
+      "index.js"
     ],
     "exclude": [
       "lib/autoMock.js"
