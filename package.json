@@ -1,6 +1,6 @@
 {
   "name": "breadboard",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Lightweight IOC container for Node.js",
   "main": "index.js",
   "engines": {
@@ -18,7 +18,7 @@
     "lint",
     "test"
   ],
-  "author": "Marek Stasikowski and Simon Adcock <marekstasikowski+simonadcock@notonthehighstreet.com>",
+  "author": "notonthehighstreet.com <technical.team@notonthehighstreet.com>",
   "license": "MIT",
   "dependencies": {
     "debug": "2.2.0",
