@@ -1,36 +1,37 @@
-const test = require('ava');
-const sinon = require('sinon');
-const subject = require('../../lib/getNativeModules');
-const sandbox = sinon.sandbox.create();
-const internalModule = 'internal/fakeNativeModule';
-const nonInternalModule = '../spec/fixtures/fakeNativeModule';
-const modules = {
-  '../spec/fixtures/fakeNativeModule': require('../fixtures/fakeNativeModule'),
-  'internal/fakeNativeModule': {}
-};
-const bindingStub = sandbox.stub(process, 'binding');
+import test from 'ava';
+import sinon from 'sinon';
+import subject from '../../lib/getNativeModules';
 
-bindingStub.returns(modules);
-test.afterEach(() => {
-  sandbox.reset();
+const sandbox = sinon.sandbox.create();
+const fakeInternalModuleKey = 'internal/fakeNativeModule';
+const fakeNativeModuleKey = 'fakeNativeModule';
+const modules = {
+  [fakeNativeModuleKey]: {},
+  [fakeInternalModuleKey]: {}
+};
+
+test.before(() => {
+  sandbox.stub(process, 'binding').withArgs('natives').returns(modules);
 });
 test.after(() => {
   sandbox.restore();
 });
+test.afterEach(() => {
+  sandbox.reset();
+});
 test('non-internal native modules are returned', async t => {
-  const fakeNonInternalModule = require('../fixtures/fakeNativeModule');
   const nativeModules = await subject([]);
 
-  t.deepEqual(nativeModules[nonInternalModule], fakeNonInternalModule);
+  t.is(nativeModules[fakeNativeModuleKey], fakeNativeModuleKey);
 });
 test('when only internal native modules are provided, no modules are returned', async t => {
   const nativeModules = await subject([]);
 
-  t.deepEqual(nativeModules[internalModule], undefined);
+  t.is(nativeModules[fakeInternalModuleKey], undefined);
 });
 test('does not add substitutes to deps', async t => {
-  const substitutes = [nonInternalModule];
+  const substitutes = [fakeNativeModuleKey];
   const nativeModules = await subject(substitutes);
 
-  t.deepEqual(nativeModules[nonInternalModule], undefined);
+  t.is(nativeModules[fakeNativeModuleKey], undefined);
 });

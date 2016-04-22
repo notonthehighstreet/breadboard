@@ -16,13 +16,6 @@ module.exports = (options) => {
   const substituteKeys = Object.keys(substitutes);
 
   d('Starting bootstrap');
-
-  if (!containerRoot) {
-    return Promise.reject(new Error('Expected container root to be specified'));
-  }
-  if (!options.entry) {
-    return Promise.reject(new Error('Expected application entry point to be specified'));
-  }
   
   return Promise
     .all([

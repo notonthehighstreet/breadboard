@@ -11,19 +11,19 @@ const walkerStub = {
 const walkMock = {
   walk: sandbox.stub().returns(walkerStub)
 };
-const loadModuleMock = sandbox.stub();
 const getModuleKeyMock = sandbox.stub();
 const fakeFileStat = {
   name: chance.word()
 };
 let subject;
 let fakeContainerRoot;
+let fakeWalkerDir;
 
 test.beforeEach(() => {
-  walkerStub.on.withArgs('file').yields(chance.word(), fakeFileStat, () => {
+  fakeWalkerDir = chance.word();
+  walkerStub.on.withArgs('file').yields(fakeWalkerDir, fakeFileStat, () => {
   });
   mock('walk', walkMock);
-  mock('../../lib/loadModule', loadModuleMock);
   mock('../../lib/getModuleKey', getModuleKeyMock);
   fakeContainerRoot = chance.word();
   subject = require('../../lib/getAppModules');
@@ -33,6 +33,9 @@ test.afterEach(() => {
   sandbox.reset();
 });
 
+test('throws if container root not specified', t => {
+  t.throws(subject());
+});
 test('creates a directory walker', t => {
   subject(fakeContainerRoot);
   t.truthy(walkMock.walk.calledWithExactly(fakeContainerRoot));
@@ -57,15 +60,13 @@ test('when walker encounters a file that has a specified substitute', async t =>
   t.deepEqual(await subject(fakeContainerRoot, [fakeModuleName]), {});
 });
 test('when walker encounters a file that has no specified substitute. a module getter is registered', async t => {
-  const fakeModule = {};
   const fakeModuleName = chance.word();
   let customModules;
 
-  loadModuleMock.returns(() => fakeModule);
   getModuleKeyMock.returns(fakeModuleName);
   walkerStub.on.withArgs('end').yields();
   customModules = await subject(fakeContainerRoot);
-  t.deepEqual(customModules[fakeModuleName], fakeModule);
+  t.deepEqual(customModules[fakeModuleName], `${fakeWalkerDir}/${fakeFileStat.name}`);
 });
 test('when walker encounters errors, promise gets rejected', t => {
   const fakeStatError = {};
