@@ -1,4 +1,6 @@
 require('../../index')({
-  entry: '/kitchen/createKitchen',
+  entry: (deps) => {
+    deps['/kitchen/createKitchen']('day');
+  },
   containerRoot: 'app'
 });

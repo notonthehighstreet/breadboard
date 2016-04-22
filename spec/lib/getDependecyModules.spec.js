@@ -3,25 +3,20 @@ const subject = require('../../lib/getDependencyModules');
 const packageDir = '../../spec/fixtures';
 const chance = new require('chance')();
 
-test('loads modules specified in package.json', async t => {
-  const expectedModules = {
-    '../../../spec/fixtures/fakeModule': require('../fixtures/fakeModule')
-  };
-
-  t.deepEqual(await subject(packageDir), expectedModules);
+test('registers modules specified in package.json', async t => {
+  t.deepEqual(await subject(packageDir), {
+    'fakeDependency': 'fakeDependency'
+  });
 });
 test('does not load modules specified in both package.json and blacklist', async t => {
-  const blacklist = ['../../../spec/fixtures/fakeModule'];
+  const blacklist = ['fakeDependency'];
 
   t.deepEqual(await subject(packageDir, blacklist), {});
 });
-test('throws if specified module is not found', async t => {
-  const brokenPackageDir = '../../spec/fixtures/broken';
-  const packageJsonModules = await subject(brokenPackageDir);
+test('throws if specified module is not found', t => {
+  const brokenPackageDir = `../../spec/fixtures/${chance.word()}`;
 
-  t.throws(() => {
-    packageJsonModules['./broken/path/to/module'];
-  });
+  t.throws(subject(brokenPackageDir));
 });
 test('throws if package.json doesn\'t exist', t => {
   const nonExistentPackageDir = `../spec/fixtures/${chance.word()}`;
@@ -40,7 +35,7 @@ test('throws if package.json doesn\'t include dependencies', t => {
     });
 });
 test('does not load modules specified in both package.json and substitutes', async t => {
-  const substitutes = ['../../../spec/fixtures/fakeModule'];
+  const substitutes = ['fakeDependency'];
 
   t.deepEqual(await subject(packageDir, [], substitutes), {});
 });

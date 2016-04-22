@@ -28,17 +28,7 @@ test.afterEach(() => {
   mock.stopAll();
   sandbox.reset();
 });
-test.serial('throws if no container root specified', t => {
-  t.throws(subject({
-    entry: chance.word()
-  }));
-});
-test.serial('throws if no entry point specified', t => {
-  t.throws(subject({
-    containerRoot: chance.word()
-  }));
-});
-test.serial('creates an injector when dependencies are loaded', async t => {
+test('creates an injector when dependencies are loaded', async t => {
   const fakeInjectorResolveValue = {};
 
   createInjectorMock.returns(() => Promise.resolve(fakeInjectorResolveValue));
@@ -50,7 +40,7 @@ test.serial('creates an injector when dependencies are loaded', async t => {
     fakeInjectorResolveValue
   );
 });
-test.serial('reject promise on errors', t => {
+test('reject promise on errors', t => {
   const fakeError = {};
 
   t.plan(1);
