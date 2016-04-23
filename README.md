@@ -14,7 +14,7 @@ Breadboard is an opinionated inversion of control container for Node.js applicat
 * Discouraging managing state of the app through side effects when `require`ing.
 * Single function call to auto-mock a module's dependencies in your tests.
 
-Breadboard will require all your application's dependencies defined in `package.json`, all Node native modules and all of your application's modules and store them in a `dependencies` object. The object is exposed to your application's modules by calling the modules as functions, passing the dependencies as an argument. As such, your modules are expected to be wrapped in an extra function returning the desired export value, which Breadboard then calls on application start.
+Breadboard will lazily require all your application's dependencies defined in `package.json`, all Node native modules and all of your application's modules and store them in a `dependencies` object. The object is exposed to your application's modules by calling the modules as functions, passing the dependencies as an argument. As such, your modules are expected to be wrapped in an extra function returning the desired export value, which Breadboard then calls on application start.
 
 ## Install
 ```
