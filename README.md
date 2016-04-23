@@ -46,14 +46,12 @@ The Breadboard equivalent would be:
 //startServer.js
 
 // wrap module in factory function
-module.exports = (dependencies) => {
+module.exports = ({ // destructure dependencies to get the modules needed
+    debug,
+    '/lib/createServer': createServer
+  }) => {
   // return the core functionality of the module as a function
   return () => {
-    // destructure dependencies to get the modules needed
-    const {
-      debug,
-      '/lib/createServer': createServer
-    } = dependencies;
     const server = createServer();
     const d = debug('myApp');
 
@@ -65,8 +63,6 @@ module.exports = (dependencies) => {
   };
 };
 ```
-
-**NOTE:** The destructuring of dependencies has to happen within your returned module function, like in the above example. The wrapper function receives a reference to the `dependencies` object which will not be fully populated by the time the wrapper function is executed, as Breadboard iterates over a flat list of your app's modules. So if module A depends on module B, by the time `dependencies` are injected into A, they might not contain a reference to module B yet. `dependencies` are fully resolved when the entry point of the whole application is executed, but not sooner.
 
 To start your application:
 ```js
@@ -84,6 +80,10 @@ breadboard({
   console.log('Application started', entryPointReturnValue, dependencies);
 });
 ```
+
+## Further examples
+
+Take a look at `examples/kitchen`. To run, `npm install` then `npm start`.
 
 ## Module keys
 Module keys in a Breadboard app are static, ie. are always relative to the container's root folder, starting with `/`, and always using `/` as path separators, no matter the platform. Consider these example module keys:

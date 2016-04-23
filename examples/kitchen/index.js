@@ -1,6 +1,8 @@
-require('../../index')({
-  entry: (deps) => {
-    deps['/kitchen/createKitchen']('day');
+import breadboard from '../../index';
+
+module.exports = breadboard({
+  entry: ({'/kitchen/createKitchen': createKitchen}) => {
+    createKitchen('day');
   },
   containerRoot: 'app'
 });
