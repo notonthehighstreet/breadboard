@@ -11,7 +11,6 @@ module.exports = ({
 
       fs.readFile('../../package.json', (err, packageJsonContents) => {
         d(packageJsonContents.toString());
-        // console.log(typeof logger);
         logger('Have a good %s!', goodWhat);
         turnOn(data.name);
       });
