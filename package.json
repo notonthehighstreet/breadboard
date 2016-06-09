@@ -1,10 +1,10 @@
 {
   "name": "breadboard",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Lightweight IOC container for Node.js",
   "main": "index.js",
   "engines": {
-    "node": "~4.4"
+    "node": "~6.2"
   },
   "repository": "notonthehighstreet/breadboard",
   "scripts": {
@@ -22,7 +22,6 @@
   "license": "MIT",
   "dependencies": {
     "debug": "2.2.0",
-    "harmony-reflect": "1.4.6",
     "lodash": "4.11.1",
     "sinon": "1.17.3",
     "walk": "2.3.9"

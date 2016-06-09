@@ -175,8 +175,6 @@ describe('Main', () => {
 ### `autoMock`
 `autoMock` automatically replaces every dependency of a given Breadboard module with a [Sinon.JS stub](http://sinonjs.org/docs/#stubs).
 
-**NOTE** `autoMock` relies on ES6 Proxies and on a [Proxy polyfill](https://github.com/tvcutsem/harmony-reflect). This requires Node to be run with the `--harmony-proxies` flag. Supposing you used Mocha as the test runner in your project, you would execute:
-`node --harmony-proxies ./node_modules/mocha/bin/_mocha`. Proxies have been implemented in V8 4.9, which has not yet landed in Node. Until then this caveat will require the `--harmony-proxies` flag.
 ### `autoMock` API
 
 `autoMock(factory, options)`
