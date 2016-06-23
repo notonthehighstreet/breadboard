@@ -5,7 +5,8 @@ const join = require('path').join;
 const getNativeModules = require('./lib/getNativeModules');
 const getAppModules = require('./lib/getAppModules');
 const getDependencyModules = require('./lib/getDependencyModules');
-const createInjector = require('./lib/createInjector');
+const createDepsProxy = require('./lib/createDepsProxy');
+const isFunction = require('lodash/isFunction');
 const d = debug('breadboard:setup');
 const e = debug('breadboard:error');
 
@@ -14,20 +15,32 @@ module.exports = (options) => {
   const blacklist = options.blacklist || [];
   const substitutes = options.substitutes || {};
   const substituteKeys = Object.keys(substitutes);
+  const entry = options.entry;
+  const initialState = options.initialState;
 
+  if (!entry) {
+    throw new Error('Expected application entry point to be specified');
+  }
   d('Starting bootstrap');
-  
+
   return Promise
     .all([
       getNativeModules(substituteKeys),
       getDependencyModules(process.cwd(), blacklist, substituteKeys),
       getAppModules(join(process.cwd(), containerRoot), substituteKeys)
     ])
-    .then(createInjector({
-      entry: options.entry,
-      initialState: options.initialState,
-      substitutes: substitutes
-    }))
+    .then((moduleGroups) => {
+      const depsProxy = createDepsProxy(moduleGroups, {
+        substitutes: substitutes
+      });
+
+      if (isFunction(entry)) {
+        return entry(depsProxy);
+      }
+      else {
+        return depsProxy[entry](initialState);
+      }
+    })
     .catch((err) => {
       e(err);
 

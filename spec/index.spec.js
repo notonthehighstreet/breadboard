@@ -8,51 +8,77 @@ const sandbox = sinon.sandbox.create();
 const getNativeModulesMock = sandbox.stub();
 const getDependencyModulesMock = sandbox.stub();
 const getAppModulesMock = sandbox.stub();
-const createInjectorMock = sandbox.stub();
+const createDepsProxyMock = sandbox.stub();
+const fakeEntryModule = sandbox.stub();
+let fakeContainerRoot;
+let fakeEntryModuleKey;
+let fakeDeps;
 let subject;
 
 test.after(() => {
   sandbox.restore();
 });
 test.beforeEach(() => {
+  fakeEntryModuleKey = chance.word();
+  fakeContainerRoot = chance.word();
+  fakeDeps = {
+    [fakeEntryModuleKey]: fakeEntryModule
+  };
   getNativeModulesMock.returns(Promise.resolve());
   getDependencyModulesMock.returns(Promise.resolve());
   getAppModulesMock.returns(Promise.resolve());
+  createDepsProxyMock.returns(fakeDeps);
   mock('../lib/getNativeModules', getNativeModulesMock);
   mock('../lib/getDependencyModules', getDependencyModulesMock);
   mock('../lib/getAppModules', getAppModulesMock);
-  mock('../lib/createInjector', createInjectorMock);
+  mock('../lib/createDepsProxy', createDepsProxyMock);
   subject = require('../index');
 });
 test.afterEach(() => {
   mock.stopAll();
   sandbox.reset();
 });
-test('creates an injector when dependencies are loaded', async t => {
-  const fakeInjectorResolveValue = {};
+test('throws if no entry point given', t => {
+  t.throws(() => subject({
+    containerRoot: fakeContainerRoot
+  }), 'Expected application entry point to be specified');
+});
+test('bootstraps container with entry as custom function', async t => {
+  const customEntryFunction = sandbox.stub();
+  const fakeCustomEntryFunctionReturnValue = {};
 
-  createInjectorMock.returns(() => Promise.resolve(fakeInjectorResolveValue));
+  customEntryFunction.returns(fakeCustomEntryFunctionReturnValue);
   t.is(
     await subject({
-      containerRoot: chance.word(),
-      entry: chance.word()
+      containerRoot: fakeContainerRoot,
+      entry: customEntryFunction
     }),
-    fakeInjectorResolveValue
+    fakeCustomEntryFunctionReturnValue
+  );
+  t.is(
+    customEntryFunction.args[0][0],
+    fakeDeps
   );
 });
-test('reject promise on errors', t => {
-  const fakeError = {};
+test('bootstraps container with entry as module key', async t => {
+  const fakeAppReturnValue = {};
 
-  t.plan(1);
-  createInjectorMock.returns(() => {
-    return Promise.reject(fakeError);
-  });
+  fakeEntryModule.returns(fakeAppReturnValue);
+  t.is(
+    await subject({
+      containerRoot: fakeContainerRoot,
+      entry: fakeEntryModuleKey
+    }),
+    fakeAppReturnValue
+  );
+});
+test('rejects promise on errors', t => {
+  const fakeErrorMessage = chance.word();
+  const fakeError = new Error(fakeErrorMessage);
 
-  return subject({
-    containerRoot: chance.word(),
-    entry: chance.word()
-  })
-    .catch((e) => {
-      t.is(e, fakeError);
-    });
+  fakeEntryModule.throws(fakeError);
+  t.throws(subject({
+    containerRoot: fakeContainerRoot,
+    entry: fakeEntryModuleKey
+  }), fakeErrorMessage);
 });
