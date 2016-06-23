@@ -1,8 +1,11 @@
 import breadboard from '../../index';
 
-module.exports = breadboard({
+breadboard({
   entry: ({'/kitchen/createKitchen': createKitchen}) => {
-    createKitchen('day');
+    return createKitchen('day');
   },
   containerRoot: 'app'
+}).catch((e) => {
+  process.stderr.write(e.stack);
+  process.exit(1);
 });
