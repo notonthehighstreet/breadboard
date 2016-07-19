@@ -45,32 +45,38 @@ test('throws if no entry point given', t => {
 });
 test('bootstraps container with entry as custom function', async t => {
   const customEntryFunction = sandbox.stub();
-  const fakeCustomEntryFunctionReturnValue = {};
+  const fakeCustomEntryFunctionReturnValue = chance.word();
 
   customEntryFunction.returns(fakeCustomEntryFunctionReturnValue);
-  t.is(
+  t.deepEqual(
     await subject({
       containerRoot: fakeContainerRoot,
       entry: customEntryFunction
     }),
-    fakeCustomEntryFunctionReturnValue
+    [fakeDeps, fakeCustomEntryFunctionReturnValue],
+    'expected bootstrapping to resolve with array of dependencies and return value of entry point'
   );
   t.is(
     customEntryFunction.args[0][0],
-    fakeDeps
+    fakeDeps,
+    'expected to call custom entry function with app dependencies'
   );
 });
 test('bootstraps container with entry as module key', async t => {
-  const fakeAppReturnValue = {};
+  const fakeAppReturnValue = chance.word();
+  const fakeInitialState = {};
 
   fakeEntryModule.returns(fakeAppReturnValue);
-  t.is(
+  t.deepEqual(
     await subject({
       containerRoot: fakeContainerRoot,
-      entry: fakeEntryModuleKey
+      entry: fakeEntryModuleKey,
+      initialState: fakeInitialState
     }),
-    fakeAppReturnValue
+    [fakeDeps, fakeAppReturnValue],
+    'expected bootstrapping to resolve with array of dependencies and return value of entry point'
   );
+  t.is(fakeEntryModule.args[0][0], fakeInitialState, 'expected to call entry module with passed in initial state');
 });
 test('rejects promise on errors', t => {
   const fakeErrorMessage = chance.word();
@@ -81,4 +87,16 @@ test('rejects promise on errors', t => {
     containerRoot: fakeContainerRoot,
     entry: fakeEntryModuleKey
   }), fakeErrorMessage);
+});
+test('resolves with entry point return value', async t => {
+  const fakeEntryModuleReturnValue = {};
+  let resolveValue;
+
+  fakeEntryModule.returns(fakeEntryModuleReturnValue);
+  resolveValue = await subject({
+    containerRoot: fakeContainerRoot,
+    entry: fakeEntryModuleKey
+  });
+
+  t.is(resolveValue[1], fakeEntryModuleReturnValue);
 });
