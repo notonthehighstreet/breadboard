@@ -33,13 +33,16 @@ module.exports = (options) => {
       const depsProxy = createDepsProxy(moduleGroups, {
         substitutes: substitutes
       });
+      let entryPointReturn;
 
       if (isFunction(entry)) {
-        return entry(depsProxy);
+        entryPointReturn = entry(depsProxy);
       }
       else {
-        return depsProxy[entry](initialState);
+        entryPointReturn = depsProxy[entry](initialState);
       }
+
+      return [depsProxy, entryPointReturn];
     })
     .catch((err) => {
       e(err);
