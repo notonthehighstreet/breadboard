@@ -5,7 +5,13 @@ breadboard({
     return createKitchen('day');
   },
   containerRoot: 'app'
-}).catch((e) => {
-  process.stderr.write(e.stack);
-  process.exit(1);
-});
+})
+  .then(([deps, entryReturnValue]) => {
+    const logger = deps['/logger'];
+
+    logger(entryReturnValue);
+  })
+  .catch((e) => {
+    process.stderr.write(e.stack);
+    process.exit(1);
+  });
