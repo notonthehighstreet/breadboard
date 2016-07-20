@@ -76,8 +76,8 @@ breadboard({
     arbitrary: 'state data'
   },
   blacklist: ['newrelic']
-}).then(([entryPointReturnValue, dependencies]) => {
-  console.log('Application started', entryPointReturnValue, dependencies);
+}).then(([dependencies, entryPointReturnValue]) => {
+  console.log('Application started', dependencies, entryPointReturnValue);
 });
 ```
 

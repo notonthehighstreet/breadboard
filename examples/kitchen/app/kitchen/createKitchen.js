@@ -18,5 +18,7 @@ module.exports = ({
         turnOn(data.name);
       });
     }, 200);
+
+    return Promise.resolve('DINNER TIME');
   };
 };

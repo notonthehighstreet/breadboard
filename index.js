@@ -42,7 +42,11 @@ module.exports = (options) => {
         entryPointReturn = depsProxy[entry](initialState);
       }
 
-      return [depsProxy, entryPointReturn];
+      return Promise
+        .resolve(entryPointReturn)
+        .then((entryPointResolveValue) => {
+          return [depsProxy, entryPointResolveValue];
+        });
     })
     .catch((err) => {
       e(err);

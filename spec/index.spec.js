@@ -100,3 +100,27 @@ test('resolves with entry point return value', async t => {
 
   t.is(resolveValue[1], fakeEntryModuleReturnValue);
 });
+test('resolves with entry point returned promise resolve value', async t => {
+  const fakeEntryModuleResolveValue = {};
+  let resolveValue;
+
+  fakeEntryModule.returns(Promise.resolve(fakeEntryModuleResolveValue));
+  resolveValue = await subject({
+    containerRoot: fakeContainerRoot,
+    entry: fakeEntryModuleKey
+  });
+
+  t.is(resolveValue[1], fakeEntryModuleResolveValue);
+});
+test('rejects with entry point returned promise reject value', t => {
+  const fakeEntryModuleRejectValue = chance.word();
+
+  fakeEntryModule.returns(Promise.reject(fakeEntryModuleRejectValue));
+  subject({
+    containerRoot: fakeContainerRoot,
+    entry: fakeEntryModuleKey
+  })
+    .catch((e) => {
+      t.is(e, fakeEntryModuleRejectValue);
+    });
+});
