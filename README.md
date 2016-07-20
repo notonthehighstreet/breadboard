@@ -95,9 +95,6 @@ Module keys in a Breadboard app are static, ie. are always relative to the conta
 Keys for native Node.js modules and 3rd party modules remain the same as if you were using `require`.
 Breadboard also loads all JSON files. To access them, append `.json` to the end of the key, eg. `/data/userPasswords.json`.
 
-## Prerequisites
-Node.js ~4.4
-
 ## API
 `breadboard(options)`
 
