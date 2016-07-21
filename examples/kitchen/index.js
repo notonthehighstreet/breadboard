@@ -6,10 +6,10 @@ breadboard({
   },
   containerRoot: 'app'
 })
-  .then(([deps, entryReturnValue]) => {
+  .then(({deps, entryResolveValue}) => {
     const logger = deps['/logger'];
 
-    logger(entryReturnValue);
+    logger(entryResolveValue);
   })
   .catch((e) => {
     process.stderr.write(e.stack);

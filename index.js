@@ -45,7 +45,10 @@ module.exports = (options) => {
       return Promise
         .resolve(entryPointReturn)
         .then((entryPointResolveValue) => {
-          return [depsProxy, entryPointResolveValue];
+          return {
+            deps: depsProxy,
+            entryResolveValue: entryPointResolveValue
+          };
         });
     })
     .catch((err) => {

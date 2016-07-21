@@ -53,7 +53,7 @@ test('bootstraps container with entry as custom function', async t => {
       containerRoot: fakeContainerRoot,
       entry: customEntryFunction
     }),
-    [fakeDeps, fakeCustomEntryFunctionReturnValue],
+    {deps: fakeDeps, entryResolveValue: fakeCustomEntryFunctionReturnValue},
     'expected bootstrapping to resolve with array of dependencies and return value of entry point'
   );
   t.is(
@@ -73,12 +73,12 @@ test('bootstraps container with entry as module key', async t => {
       entry: fakeEntryModuleKey,
       initialState: fakeInitialState
     }),
-    [fakeDeps, fakeAppReturnValue],
+    {deps: fakeDeps, entryResolveValue: fakeAppReturnValue},
     'expected bootstrapping to resolve with array of dependencies and return value of entry point'
   );
   t.is(fakeEntryModule.args[0][0], fakeInitialState, 'expected to call entry module with passed in initial state');
 });
-test('rejects promise on errors', t => {
+test('rejects promise on entry module errors', t => {
   const fakeErrorMessage = chance.word();
   const fakeError = new Error(fakeErrorMessage);
 
@@ -87,18 +87,6 @@ test('rejects promise on errors', t => {
     containerRoot: fakeContainerRoot,
     entry: fakeEntryModuleKey
   }), fakeErrorMessage);
-});
-test('resolves with entry point return value', async t => {
-  const fakeEntryModuleReturnValue = {};
-  let resolveValue;
-
-  fakeEntryModule.returns(fakeEntryModuleReturnValue);
-  resolveValue = await subject({
-    containerRoot: fakeContainerRoot,
-    entry: fakeEntryModuleKey
-  });
-
-  t.is(resolveValue[1], fakeEntryModuleReturnValue);
 });
 test('resolves with entry point returned promise resolve value', async t => {
   const fakeEntryModuleResolveValue = {};
@@ -110,9 +98,9 @@ test('resolves with entry point returned promise resolve value', async t => {
     entry: fakeEntryModuleKey
   });
 
-  t.is(resolveValue[1], fakeEntryModuleResolveValue);
+  t.is(resolveValue.entryResolveValue, fakeEntryModuleResolveValue);
 });
-test('rejects with entry point returned promise reject value', t => {
+test.cb('rejects with entry point returned promise reject value', t => {
   const fakeEntryModuleRejectValue = chance.word();
 
   fakeEntryModule.returns(Promise.reject(fakeEntryModuleRejectValue));
@@ -122,5 +110,6 @@ test('rejects with entry point returned promise reject value', t => {
   })
     .catch((e) => {
       t.is(e, fakeEntryModuleRejectValue);
+      t.end();
     });
 });
