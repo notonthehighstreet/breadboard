@@ -1,4 +1,4 @@
-import breadboard from '../../index';
+import breadboard from 'breadboard';
 
 breadboard({
   entry: ({'/kitchen/createKitchen': createKitchen}) => {

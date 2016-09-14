@@ -26,8 +26,8 @@ module.exports = (options) => {
   return Promise
     .all([
       getNativeModules(substituteKeys),
-      getDependencyModules(process.cwd(), blacklist, substituteKeys),
-      getAppModules(join(process.cwd(), containerRoot), substituteKeys)
+      getDependencyModules(join(__dirname, '..', '..'), blacklist, substituteKeys),
+      getAppModules(join(__dirname, '..', '..', containerRoot), substituteKeys)
     ])
     .then((moduleGroups) => {
       const depsProxy = createDepsProxy(moduleGroups, {
