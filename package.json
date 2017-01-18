@@ -1,6 +1,6 @@
 {
   "name": "breadboard",
-  "version": "9.0.2",
+  "version": "9.0.3",
   "description": "Lightweight IOC container for Node.js",
   "main": "index.js",
   "engines": {
