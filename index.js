@@ -53,7 +53,6 @@ module.exports = (options) => {
     })
     .catch((err) => {
       e(err);
-
-      return Promise.reject(err);
+      throw new Error(err);
     });
 };
